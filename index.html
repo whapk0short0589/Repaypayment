@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Indian Payment NOC Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<style>
+body{font-family:Arial;background:#eef2f5;padding:30px}
+.box{max-width:520px;margin:auto;background:#fff;padding:25px;border-radius:10px}
+input,button{width:100%;padding:10px;margin-top:10px;font-size:15px}
+button{background:#0a7cff;color:#fff;border:none;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Indian Payment NOC (Final)</h2>
+<input id="name" placeholder="Customer Name">
+<input id="mobile" placeholder="Customer Mobile">
+<input id="amount" placeholder="Amount (INR)">
+<button onclick="generatePDF()">Download PDF</button>
+</div>
+
+<script>
+function generatePDF(){
+  const name=document.getElementById('name').value;
+  const mobile=document.getElementById('mobile').value;
+  const amount=document.getElementById('amount').value;
+  const now=new Date().toLocaleString();
+  const ref='NOC-'+Date.now();
+
+  const docDefinition={
+    watermark:{text:'AUTO GENERATED',color:'gray',opacity:0.1,bold:true},
+    content:[
+      {text:'NO OBJECTION CERTIFICATE (NOC)',style:'header'},
+      {text:'Reference: '+ref},
+      {text:'Date & Time: '+now,margin:[0,0,0,10]},
+      {text:`This is to certify that there is no objection regarding the payment of INR ${amount} made / to be made by ${name}, Mobile ${mobile}.`},
+      {text:'No claim or dispute shall be raised in future.',margin:[0,5,0,10]},
+      {text:'यह प्रमाणित किया जाता है कि उपरोक्त भुगतान पर कोई आपत्ति नहीं है। भविष्य में कोई दावा या विवाद नहीं किया जाएगा।',margin:[0,0,0,10]},
+      {qr: ref, fit:100},
+      {text:'System generated document. No signature required.',fontSize:9}
+    ],
+    styles:{header:{fontSize:16,bold:true,alignment:'center'}}
+  };
+
+  pdfMake.createPdf(docDefinition).download(ref+'.pdf');
+}
+</script>
+
+</body>
+</html>
