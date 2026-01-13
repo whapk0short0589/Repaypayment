@@ -4,27 +4,26 @@
 <meta charset="UTF-8">
 <title>NOC Letter Generator</title>
 
-<!-- jsPDF CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body{
-  background:#f2f4f7;
+  background:#eef2f7;
   font-family: Arial, sans-serif;
   padding:30px;
 }
 .card{
-  max-width:800px;
+  max-width:820px;
   margin:auto;
   background:#ffffff;
   padding:35px;
   border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
 }
 h1{
   text-align:center;
-  color:#1f4fd8;
-  margin-bottom:20px;
+  color:#0d47a1;
+  margin-bottom:25px;
 }
 input{
   width:100%;
@@ -35,14 +34,14 @@ input{
 button{
   width:100%;
   padding:14px;
-  background:#1f4fd8;
+  background:#0d47a1;
   color:#fff;
   border:none;
   font-size:16px;
   cursor:pointer;
 }
 button:hover{
-  background:#163bb3;
+  background:#093170;
 }
 </style>
 </head>
@@ -50,7 +49,7 @@ button:hover{
 <body>
 
 <div class="card">
-  <h1>NOC (Letter)</h1>
+  <h1>NO OBJECTION CERTIFICATE (NOC)</h1>
 
   <input id="name" placeholder="Customer Name">
   <input id="mobile" placeholder="Mobile Number">
@@ -79,44 +78,71 @@ function generatePDF(){
   const ref = "NOC-" + now.getFullYear() + "-" + Math.floor(100000 + Math.random()*900000);
   const dt = now.toLocaleString("en-IN");
 
-  doc.setFontSize(20);
-  doc.text("NO OBJECTION CERTIFICATE (NOC)",105,20,null,null,"center");
+  /* ===== HEADER ===== */
+  doc.setFontSize(22);
+  doc.setTextColor(13,71,161);
+  doc.setFont("helvetica","bold");
+  doc.text("NO OBJECTION CERTIFICATE",105,22,null,null,"center");
 
+  doc.setDrawColor(13,71,161);
+  doc.line(20,26,190,26);
+
+  /* ===== META ===== */
   doc.setFontSize(11);
-  doc.text("Reference No: " + ref,20,35);
-  doc.text("Date & Time: " + dt,140,35);
+  doc.setTextColor(0,0,0);
+  doc.setFont("helvetica","normal");
+  doc.text("Reference No: " + ref,20,38);
+  doc.text("Date & Time: " + dt,140,38);
 
-  doc.text("Customer Name: " + name,20,50);
-  doc.text("Mobile Number: " + mobile,20,58);
+  doc.setFont("helvetica","bold");
+  doc.text("Customer Name:",20,50);
+  doc.text("Mobile Number:",20,58);
 
+  doc.setFont("helvetica","normal");
+  doc.text(name,65,50);
+  doc.text(mobile,65,58);
+
+  /* ===== BODY ===== */
   doc.setFontSize(12);
+  doc.setFont("helvetica","bold");
+  doc.text("NO OBJECTION CERTIFICATE (NOC)",105,75,null,null,"center");
+
+  doc.setFont("helvetica","normal");
   doc.text(
     "This is to certify that Mr./Ms. " + name +
-    ", holding mobile number " + mobile +
-    ", has taken a loan of INR " + amount +
-    " and has successfully repaid the same through our secure online payment system.",
-    20,75,{maxWidth:170}
+    ", holding the registered mobile number " + mobile +
+    ", has taken a loan from us and has successfully repaid the same through our secure online payment system.",
+    20,90,{maxWidth:170}
   );
 
   doc.text(
-    "We hereby declare that we have no objection regarding this transaction. "
-    + "The payment is valid, lawful and no dispute shall arise in future.",
-    20,105,{maxWidth:170}
+    "We hereby declare with full confidence that we have no objection regarding this transaction. "
+    + "The payment is valid, lawful, and no claim or dispute shall arise in future.",
+    20,115,{maxWidth:170}
   );
 
   doc.text(
-    "This NOC is issued for official and verification purposes only.",
-    20,130,{maxWidth:170}
+    "This No Objection Certificate is issued solely for official and verification purposes.",
+    20,140,{maxWidth:170}
   );
 
-  doc.line(20,155,190,155);
+  /* ===== AMOUNT BOX ===== */
+  doc.setDrawColor(200);
+  doc.rect(20,155,170,25);
 
-  doc.text("Amount Paid: INR " + amount,20,165);
-  doc.text("Transaction ID: " + tx,20,175);
+  doc.setFont("helvetica","bold");
+  doc.setTextColor(0,128,0);
+  doc.text("Amount Paid: INR " + amount,25,170);
 
+  doc.setTextColor(0,0,0);
+  doc.text("Transaction ID: " + tx,25,178);
+
+  /* ===== FOOTER ===== */
+  doc.setFontSize(10);
+  doc.setFont("helvetica","italic");
   doc.text(
     "Note: This document is system-generated and does not require any signature.",
-    20,190
+    105,195,null,null,"center"
   );
 
   doc.save("NOC_" + name + ".pdf");
